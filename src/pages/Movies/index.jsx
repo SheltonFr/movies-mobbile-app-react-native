@@ -4,7 +4,7 @@ import React from 'react'
 export default function Movies() {
   return (
     <View>
-      <Text>Tela Movied</Text>
+      <Text>Tela Movies</Text>
     </View>
   )
 }
