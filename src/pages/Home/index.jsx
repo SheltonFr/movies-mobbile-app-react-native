@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, ActivityIndicator } from "react-native";
 
 import Header from "../../components/Header";
 import { Feather } from '@expo/vector-icons'
@@ -14,19 +14,23 @@ import {
     Banner,
     MoviesSlider
 } from "./style";
+
 import SliderItem from "../../components/SliderItem";
 import api, { key } from "../../services/api";
-import { getListMovies } from "../../utils/movie";
+import { getListMovies, randomBanner } from "../../utils/movie";
 
 export default Home = () => {
 
-    const [latest, setLatest] = useState(null)
     const [nowMovies, setNowMovies] = useState([]);
     const [popularMovies, setPopularMovies] = useState([]);
     const [topMovies, setTopMovies] = useState([]);
+    const [bannerMovie, setBannerMovie] = useState({});
+
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        let isActive = true;
+        let isActive = true; // Home page is active	?
+        const ac = new AbortController();
 
 
         async function getMovies() {
@@ -59,13 +63,33 @@ export default Home = () => {
             ])
 
 
-            setNowMovies(getListMovies(10, nowData.data.results));
-            setPopularMovies(getListMovies(5, popularData.data.results));
-            setTopMovies(getListMovies(5, topData.data.results));
+            if (isActive) {
+                setNowMovies(getListMovies(10, nowData.data.results));
+                setPopularMovies(getListMovies(5, popularData.data.results));
+                setTopMovies(getListMovies(5, topData.data.results));
+
+                setBannerMovie(nowData.data.results[randomBanner(nowData.data.results)])
+                setLoading(false);
+            }
         }
 
         getMovies();
+
+        // funcao chamada quando o componente é desmontado[opcional]
+        return () => {
+            isActive = false; // Home passa a nao estar activa
+            ac.abort(); // aborta todas as operacoes que estavam a correr no componente(requisicoes, etc...)
+        }
     }, [])
+
+
+    if (loading) {
+        return (
+            <Container>
+                <ActivityIndicator size={"large"} color='#fff' />
+            </Container>
+        )
+    }
 
     return (
         <Container>
@@ -84,10 +108,10 @@ export default Home = () => {
                 showsVerticalScrollIndicator={false}
             >
                 <Title>Em Cartaz</Title>
-                <BannerButton activeOpacity={.8} onPress={() => alert('Banner Button')}>
+                <BannerButton activeOpacity={.8}>
                     <Banner
                         resizeMethod="resize"
-                        source={{ uri: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGZpbG1lfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60' }}
+                        source={{  uri: `https://image.tmdb.org/t/p/original${bannerMovie.poster_path}` }}
                     />
                 </BannerButton>
 

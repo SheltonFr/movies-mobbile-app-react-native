@@ -7,3 +7,8 @@ export function getListMovies(size, movies) {
 
   return moviesList;
 }
+
+// generate random number based on movie amount
+export function randomBanner(movies) {
+  return Math.floor(Math.random() * movies.length);
+}
