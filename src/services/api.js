@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_KEY } from "@env";
 
 // urm filmes em cartaz
 // /movie/now_playing
@@ -9,10 +10,9 @@ import axios from "axios";
 // url filmes mais votados
 // /movie/top_rated
 
-export const key = '3a9a44f6749daeba441b49cb90935aff'
-
+export const key = API_KEY;
 const api = axios.create({
-    baseURL: 'https://api.themoviedb.org/3'
-})
+  baseURL: "https://api.themoviedb.org/3",
+});
 
 export default api;
