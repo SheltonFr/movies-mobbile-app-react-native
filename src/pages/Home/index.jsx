@@ -83,6 +83,11 @@ export default Home = () => {
     }, [])
 
 
+    function navigateToDetailsPage(item) {
+        console.log(item.id)
+    }
+
+
     if (loading) {
         return (
             <Container>
@@ -108,7 +113,7 @@ export default Home = () => {
                 showsVerticalScrollIndicator={false}
             >
                 <Title>Em Cartaz</Title>
-                <BannerButton activeOpacity={.8}>
+                <BannerButton activeOpacity={.8} onPress={() => navigateToDetailsPage(bannerMovie.id)}>
                     <Banner
                         resizeMethod="resize"
                         source={{  uri: `https://image.tmdb.org/t/p/original${bannerMovie.poster_path}` }}
